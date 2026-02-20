@@ -33,6 +33,17 @@ class _ShowProductsState extends State<ShowProducts> {
         centerTitle: true,
         elevation: 0,
       ),
+            floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: FloatingActionButton.extended(
+              backgroundColor: const Color(0xFFE0B3E9),
+              icon: const Icon(Icons.add),
+              label: const Text("ADD NEW BOOK"),
+              onPressed: () {
+                debugPrint("Go to Add Book Page");
+              },
+            ),
+
       backgroundColor: const Color(0xFFF5F9FF), // พื้นหลังฟ้าพาสเทลอ่อน
       body: isLoading
           ? const Center(child: CircularProgressIndicator()) // แสดงวงกลมหมุนตอนโหลด
@@ -73,8 +84,21 @@ class _ShowProductsState extends State<ShowProducts> {
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF334E68)), // สีของชื่อหนังสือ
         ),
         subtitle: Text("ผู้แต่ง: ${book.author}\nปีที่พิมพ์: ${book.publishedYear}"),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey), // สีของไอคอนลูกศร
-        isThreeLine: true,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                // TODO: delete API
+                debugPrint("Delete book id: ${book.id}");
+              },
+            ),
+            // const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+          ],
+        ),
+        // trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey), // สีของไอคอนลูกศร
+        // isThreeLine: true,
       ),
     );
   }
@@ -119,5 +143,6 @@ class _ShowProductsState extends State<ShowProducts> {
       setState(() => isLoading = false);
       debugPrint("Catch Error: $e");
     }
+        
   }
 }
