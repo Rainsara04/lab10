@@ -6,10 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:lab10/page/show_products.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,150 +15,201 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  // bool _isPasswordVisible = false;
+  bool _isObscure = true;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-      return Scaffold(
-      backgroundColor: const Color(0xFFF3E5F5), // ม่วงพาสเทลอ่อน
-      body: Center(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFFF3E5F5), //  สีพื้นหลังของหน้าเข้าสู่ระบบ
+    body: SafeArea(
+      child: Center(
         child: SingleChildScrollView(
-            child: Form(    // เพิ่ม Form
-              key: _formKey,// เพิ่ม Form และกำหนด key
+          padding: const EdgeInsets.symmetric(horizontal: 25), // เพิ่ม padding ซ้าย-ขวา
+          child: Form( // เพิ่ม Form เพื่อใช้กับ TextFormField
+            key: _formKey, // เพิ่ม Form เพื่อใช้กับ TextFormField
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontSize: 32, 
-                    fontWeight: FontWeight.bold, 
-                    color: Color.fromARGB(255, 159, 125, 216), 
-                  ),
-                ),
+
                 const SizedBox(height: 40),
 
-                /// Username
-                TextFormField(
-                  controller: _usernameController, // เพิ่ม controller
-                  validator: (value) { // เพิ่ม validator
-                    if (value == null || value.isEmpty) {
-                      return "กรอก username";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Username",
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                /// Logo
+                const CircleAvatar(
+                  radius: 45, // ขนาดของโลโก้
+                  backgroundColor: Color(0xFFB155C3), // สีพื้นหลังของโลโก้
+                  child: Icon(Icons.menu_book, // ใช้ไอคอนหนังสือเป็นโลโก้
+                      size: 40, color: Colors.white), // สีของไอคอนโลโก้
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Welcome Books",
+                  style: TextStyle(
+                    fontSize: 36, // ขนาดของข้อความ
+                    fontWeight: FontWeight.bold, // ทำให้ตัวอักษรหนาขึ้น
+                    color: Color(0xFF8E6BBE), // สีของข้อความ
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 40), // เพิ่มระยะห่างระหว่างข้อความและฟอร์ม
 
-                /// Password
-                TextFormField(
-                  controller: _passwordController, // เพิ่ม controller
-                  obscureText: true,
-                  validator: (value) { // เพิ่ม validator
-                    if (value == null || value.isEmpty) {
-                      return "กรอก password";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                /// Card Container
+                Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // สีพื้นหลังของการ์ด
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 25,
+                        color: Colors.black12, // สีเงาของการ์ด
+                        offset: Offset(0, 10),
+                      )
+                    ],
                   ),
-                ),
+                  child: Column(
+                    children: [
 
-                const SizedBox(height: 30), 
-
-                /// Login Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 177, 85, 195), // สีพื้นหลังของปุ่ม
-                      foregroundColor: Colors.white, // สีของข้อความบนปุ่ม
-                      side: const BorderSide(
-                        color: Color.fromARGB(255, 243, 169, 50), // สีของเส้นขอบ 
-                        width: 2, // ความหนาของเส้นขอบ
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12), 
-                      ),
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        // ทำการเข้าสู่ระบบ
-                        debugPrint(_usernameController.text); // แสดง username ที่กรอก
-                        debugPrint(_passwordController.text); // แสดง password ที่กรอก
-
-                        var json = jsonEncode({
-                          "username": _usernameController.text, // ส่ง username ในรูปแบบ JSON
-                          "password": _passwordController.text,
-                        });
-                        // await prefs.setString("token", "your_token_here"); // เก็บ token ใน SharedPreferences
-                        var url = Uri.parse("http://10.0.2.2:3000/api/auth/login"); // เปลี่ยนเป็น URL ของ API ที่ต้องการ            );
-
-                        var response = await http.post(
-                          url,
-                          body: json, 
-                          headers: {
-                            HttpHeaders.contentTypeHeader: "application/json" // กำหนด header ว่าเป็น JSON
-                          },
-                        ); 
-                          debugPrint(response.body);// ถ้ากรอกครบแล้ว จะทำงานตรงนี้ //
-                          debugPrint("Login สำเร็จ"); // แสดงข้อความว่า Login สำเร็จ //
-
-                        if (response.statusCode == 200) {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          // var data = jsonDecode(response.body);
-                          var userjson = jsonDecode(response.body)['payload']; // แปลง response เป็น JSON และดึงข้อมูล payload
-                          var tokenjson = jsonDecode(response.body)['token']; // ดึง token จาก response
-                          if (userjson != null) {await prefs.setStringList('user',[
-                            userjson['username'] ?? "", // เก็บ username ใน SharedPreferences
-                            userjson['tel'] ?? "", // เก็บเบอร์โทรศัพท์ใน SharedPreferences 
-                          ]);
+                      /// Username
+                      TextFormField(
+                        controller: _usernameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "กรุณากรอก username";
                           }
-                          if (tokenjson != null) {
-                            await prefs.setString('token', tokenjson);// เก็บ token ใน SharedPreferences
-                          debugPrint(tokenjson.toString()); // แสดง token ที่ได้รับ
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ShowProducts()),
-                          );
-                        }// นำไปหน้า ShowProducts
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("กำลังเข้าสู่ระบบ..."),
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.person),
+                          hintText: "Username",
+                          filled: true,
+                          fillColor: const Color(0xFFF8F4FC),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28), // ปรับความโค้งของขอบ
+                            borderSide: BorderSide.none,
                           ),
-                        );             
-                      }
-                    },
-                      child: const Text("Login"),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      /// Password
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "กรุณากรอก password";
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock),
+                          hintText: "Password",
+                          filled: true,
+                          fillColor: const Color(0xFFF8F4FC),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      /// Login Button (logic เดิม)
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFB155C3),
+                            foregroundColor: Colors.white,
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(18),
+                            ),
+                            elevation: 8,
+                          ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+
+                              var json = jsonEncode({
+                                "username":_usernameController.text,
+                                "password":_passwordController.text,
+                              });
+
+                              var url = Uri.parse(
+                                  "http://10.0.2.2:3000/api/auth/login");
+
+                              var response = await http.post(
+                                url,
+                                body: json,
+                                headers: {
+                                  HttpHeaders.contentTypeHeader:
+                                      "application/json"
+                                },
+                              );
+
+                              if (response.statusCode == 200) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences
+                                        .getInstance();
+                                var userjson =
+                                    jsonDecode(response.body)
+                                        ['payload'];
+                                var tokenjson =
+                                    jsonDecode(response.body)
+                                        ['accessToken'];
+
+                                await prefs.setStringList(
+                                    'user', [
+                                  userjson['username'] ?? "",
+                                  userjson['tel'] ?? "",
+                                ]);
+
+                                await prefs.setString(
+                                    'token', tokenjson);
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ShowProducts()),
+                                );
+                              }
+
+                              ScaffoldMessenger.of(context) //  แสดงข้อความระหว่างการเข้าสู่ระบบ
+                                  .showSnackBar(
+                                const SnackBar( // แสดงข้อความระหว่างการเข้าสู่ระบบ
+                                    content: Text(
+                                        "กำลังเข้าสู่ระบบ...")),
+                              );
+                            }
+                          },
+                          child: const Text(
+                            "LOGIN",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-                /// Register Button
                 TextButton(
                   onPressed: () {},
                   child: const Text(
-                    "Register",
+                    " Register ",
+                    // "Create Account",
                     style: TextStyle(
+                      fontSize: 14,
                       color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
                     ),
@@ -171,7 +220,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 

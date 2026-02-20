@@ -11,16 +11,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Login App',
-
-      // โทนม่วงพาสเทล
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        scaffoldBackgroundColor: const Color(0xFFF3E5F5),
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFDC83EA), // สีหลักของแอป
+          primary: const Color(0xFFDB94E6), // สีหลักที่ใช้ในส่วนต่างๆ ของแอป
+          secondary: const Color(0xFFF3E5F5), // สีรองที่ใช้สำหรับเน้นส่วนต่างๆ ของแอป
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF3E5F5),
       ),
-
       home: const LoginPage(), // หน้าแรก
     );
   }
