@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lab10/page/login_page.dart';
-import 'package:lab10/page/edit_book_page.dart';
+// import 'package:lab10/page/edit_book_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
       home: const LoginPage(),
 
       // ✅ เพิ่มตรงนี้
-      routes: {
-        '/editBook': (context) => const EditBookPage(),
-      },
+      // routes: {
+      //   '/editBook': (context) => const EditBookPage(),
+      // },
     );
   }
 }

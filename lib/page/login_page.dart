@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lab10/page/show_products.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lab10/page/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,11 +35,19 @@ Widget build(BuildContext context) {
                 const SizedBox(height: 40),
 
                 /// Logo
-                const CircleAvatar(
-                  radius: 45, // ขนาดของโลโก้
-                  backgroundColor: Color(0xFFB155C3), // สีพื้นหลังของโลโก้
-                  child: Icon(Icons.menu_book, // ใช้ไอคอนหนังสือเป็นโลโก้
-                      size: 40, color: Colors.white), // สีของไอคอนโลโก้
+                const 
+                // CircleAvatar(
+                //   radius: 45, // ขนาดของโลโก้
+                //   backgroundColor: Color(0xFFB155C3), // สีพื้นหลังของโลโก้
+                //   child: Icon(Icons.book, // ใช้ไอคอนหนังสือเป็นโลโก้
+                //       size: 40, color: Colors.white), // สีของไอคอนโลโก้
+                // ),
+                CircleAvatar(
+                  radius: 45,
+                  backgroundColor: const Color(0xFFB155C3),
+                  backgroundImage: const AssetImage(
+                    'assets/yubpybook.png', // ใช้รูปภาพจาก assets เป็นโลโก้
+                  ),
                 ),
 
                 const SizedBox(height: 20),
@@ -81,7 +90,7 @@ Widget build(BuildContext context) {
                           return null;
                         },
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.person),
+                          prefixIcon: const Icon(Icons.person), // ไอคอนผู้ใช้
                           hintText: "Username",
                           filled: true,
                           fillColor: const Color(0xFFF8F4FC),
@@ -204,7 +213,14 @@ Widget build(BuildContext context) {
                 const SizedBox(height: 20),
 
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RegisterPage(),
+                      ),
+                    );
+                  },
                   child: const Text(
                     " Register ",
                     // "Create Account",
